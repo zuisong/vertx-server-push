@@ -1,21 +1,27 @@
 package cn.mmooo
 
-import io.netty.handler.codec.http.*
-import io.vertx.core.*
-import io.vertx.core.http.*
-import io.vertx.core.impl.*
-import io.vertx.core.json.*
-import io.vertx.ext.web.*
-import io.vertx.ext.web.handler.*
-import io.vertx.kotlin.coroutines.*
-import org.slf4j.*
-import java.lang.invoke.*
+import io.netty.handler.codec.http.HttpHeaderNames
+import io.netty.handler.codec.http.HttpHeaderValues
+import io.vertx.core.Handler
+import io.vertx.core.Vertx
+import io.vertx.core.http.HttpServerResponse
+import io.vertx.core.json.JsonObject
+import io.vertx.ext.web.Router
+import io.vertx.ext.web.RoutingContext
+import io.vertx.ext.web.handler.BodyHandler
+import io.vertx.ext.web.handler.CorsHandler
+import io.vertx.ext.web.handler.LoggerHandler
+import io.vertx.ext.web.handler.ResponseTimeHandler
+import io.vertx.kotlin.coroutines.CoroutineVerticle
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import java.lang.invoke.MethodHandles
 import java.util.*
 
 
 val logger: Logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
 
-class ServerVerticle : CoroutineVerticle() {
+class SSEServerVerticle : CoroutineVerticle() {
 
     override suspend fun start() {
 
