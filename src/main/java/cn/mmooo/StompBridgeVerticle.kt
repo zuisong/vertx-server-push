@@ -10,6 +10,10 @@ import io.vertx.ext.stomp.StompServerOptions
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.BodyHandler
+import io.vertx.ext.web.handler.CorsHandler
+import io.vertx.ext.web.handler.LoggerHandler
+import io.vertx.ext.web.handler.ResponseTimeHandler
+import io.vertx.ext.web.handler.sockjs.SockJSHandler
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 
 
@@ -20,7 +24,11 @@ class StompBridgeVerticle : CoroutineVerticle() {
         val server = createStompServer(vertx)
 
         val router = Router.router(vertx)
+        router.route().handler(CorsHandler.create().allowCredentials(true))
+        router.route().handler(ResponseTimeHandler.create())
         router.route().handler(BodyHandler.create())
+        router.route().handler(LoggerHandler.create())
+        router.route("/stomp/*").handler(SockJSHandler.create(vertx).also { it.socketHandler { } })
         router.post("/push")
             .handler { rc: RoutingContext ->
                 val body = rc.bodyAsString
@@ -64,6 +72,7 @@ class StompBridgeVerticle : CoroutineVerticle() {
                         .addInboundPermitted(PermittedOptions().setAddress("NO_PERMISSION"))
                         .addOutboundPermitted(PermittedOptions())
                 )
+
             }
         return stompServer
     }

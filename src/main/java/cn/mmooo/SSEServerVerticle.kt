@@ -26,7 +26,7 @@ class SSEServerVerticle : CoroutineVerticle() {
     override suspend fun start() {
 
         val router = Router.router(vertx)
-        router.route().handler(CorsHandler.create("*"))
+        router.route().handler(CorsHandler.create().allowCredentials(true))
         router.route().handler(BodyHandler.create())
         router.route().handler(ResponseTimeHandler.create())
         router.route().handler(LoggerHandler.create())
