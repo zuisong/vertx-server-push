@@ -1,3 +1,5 @@
 .idea/
 target
-vertx-sse.iml
+*.iml
+.*
+!.gitignore
