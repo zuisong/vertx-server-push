@@ -1,4 +1,4 @@
-package cn.mmooo
+package cn.mmooo.verticle
 
 import io.vertx.core.Vertx
 import io.vertx.core.http.HttpServerOptions
@@ -57,24 +57,20 @@ class StompBridgeVerticle : CoroutineVerticle() {
 
 
     private fun createStompServer(vertx: Vertx): StompServer {
-        val stompServer = StompServer.create(
+        return StompServer.create(
             vertx,
             StompServerOptions()
                 .setPort(-1)
                 .setWebsocketBridge(true)
                 .setWebsocketPath("/stomp")
+        ).handler(
+            StompServerHandler.create(vertx).bridge(
+                BridgeOptions()
+                    // 禁止网页向 eventbus 发消息
+                    .addInboundPermitted(PermittedOptions().setAddress("NO_PERMISSION"))
+                    .addOutboundPermitted(PermittedOptions())
+            )
         )
-            .handler(StompServerHandler.create(vertx))
-            .also { server ->
-                server.stompHandler().bridge(
-                    BridgeOptions()
-                        // 禁止网页向 eventbus 发消息
-                        .addInboundPermitted(PermittedOptions().setAddress("NO_PERMISSION"))
-                        .addOutboundPermitted(PermittedOptions())
-                )
-
-            }
-        return stompServer
     }
 
 }

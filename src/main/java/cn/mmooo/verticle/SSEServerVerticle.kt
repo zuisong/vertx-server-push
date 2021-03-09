@@ -1,4 +1,4 @@
-package cn.mmooo
+package cn.mmooo.verticle
 
 import io.netty.handler.codec.http.HttpHeaderNames
 import io.netty.handler.codec.http.HttpHeaderValues

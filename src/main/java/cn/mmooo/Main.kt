@@ -1,4 +1,5 @@
-import cn.mmooo.StompBridgeVerticle
+package cn.mmooo
+import cn.mmooo.verticle.StompBridgeVerticle
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
 import io.vertx.core.VertxOptions
