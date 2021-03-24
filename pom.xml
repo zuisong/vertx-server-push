@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <groupId>cn.mmooo</groupId>
   <artifactId>vertx-server-push</artifactId>
   <version>1.0.0</version>
-
   <properties>
     <java.version>1.8</java.version>
     <kotlin.version>1.4.31</kotlin.version>
-    <vertx.version>4.0.2</vertx.version>
-    <jackson-bom.version>2.12.0</jackson-bom.version>
-
+    <vertx.version>4.0.3</vertx.version>
+    <jackson-bom.version>2.12.1</jackson-bom.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.compilerVersion>${java.version}</maven.compiler.compilerVersion>
@@ -21,7 +17,6 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
   </properties>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -47,75 +42,69 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
   <dependencies>
-
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib-jdk8</artifactId>
     </dependency>
-
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
     </dependency>
-
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-kotlin</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-core</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-web</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-lang-kotlin-coroutines</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-stomp</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-hazelcast</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.github.microutils</groupId>
       <artifactId>kotlin-logging-jvm</artifactId>
       <version>2.0.6</version>
     </dependency>
-
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <version>1.2.3</version>
     </dependency>
-
   </dependencies>
-
+  <repositories>
+    <repository>
+      <id>aliyun</id>
+      <url>https://maven.aliyun.com/repository/public</url>
+    </repository>
+  </repositories>
   <build>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>2.4.3</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.springframework.boot.experimental</groupId>
+            <artifactId>spring-boot-thin-layout</artifactId>
+            <version>1.0.25.RELEASE</version>
+          </dependency>
+        </dependencies>
         <configuration>
           <finalName>${project.artifactId}</finalName>
         </configuration>
@@ -151,24 +140,21 @@
           <jvmTarget>${java.version}</jvmTarget>
         </configuration>
       </plugin>
-
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>flatten-maven-plugin</artifactId>
         <version>1.2.7</version>
         <configuration>
-          <flattenMode>clean</flattenMode>
+          <flattenMode>oss</flattenMode>
         </configuration>
-        <executions>
-          <!-- enable flattening -->
+        <executions>          <!-- enable flattening -->
           <execution>
             <id>flatten</id>
             <phase>process-resources</phase>
             <goals>
               <goal>flatten</goal>
             </goals>
-          </execution>
-          <!-- ensure proper cleanup -->
+          </execution>          <!-- ensure proper cleanup -->
           <execution>
             <id>clean</id>
             <phase>clean</phase>
@@ -178,7 +164,6 @@
           </execution>
         </executions>
       </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
@@ -193,7 +178,6 @@
           </execution>
         </executions>
       </plugin>
-
       <plugin>
         <groupId>pl.project13.maven</groupId>
         <artifactId>git-commit-id-plugin</artifactId>
@@ -212,9 +196,6 @@
           <injectAllReactorProjects>true</injectAllReactorProjects>
         </configuration>
       </plugin>
-
-
     </plugins>
   </build>
-
 </project>
