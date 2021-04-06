@@ -22,7 +22,6 @@ class StompBridgeVerticle : CoroutineVerticle() {
     router.route().handler(ResponseTimeHandler.create())
     router.route().handler(BodyHandler.create())
     router.route().handler(LoggerHandler.create())
-    router.route("/stomp/*").handler(SockJSHandler.create(vertx).also { it.socketHandler { } })
     router.post("/push")
       .handler { rc: RoutingContext ->
         val body = rc.bodyAsString
@@ -60,6 +59,7 @@ class StompBridgeVerticle : CoroutineVerticle() {
         .setPort(-1)
         .setWebsocketBridge(true)
         .setWebsocketPath("/stomp")
+
     ).handler(
       StompServerHandler.create(vertx).bridge(
         BridgeOptions()
