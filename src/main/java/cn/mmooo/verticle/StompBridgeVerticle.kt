@@ -7,9 +7,10 @@ import io.vertx.ext.stomp.*
 import io.vertx.ext.stomp.BridgeOptions
 import io.vertx.ext.web.*
 import io.vertx.ext.web.handler.*
-import io.vertx.ext.web.handler.sockjs.*
 import io.vertx.kotlin.coroutines.*
+import mu.*
 
+private val logger = KotlinLogging.logger { }
 
 class StompBridgeVerticle : CoroutineVerticle() {
 
@@ -24,7 +25,7 @@ class StompBridgeVerticle : CoroutineVerticle() {
     router.route().handler(LoggerHandler.create())
     router.post("/push")
       .handler { rc: RoutingContext ->
-        val body = rc.bodyAsString
+        val body = rc.getBodyAsString(Charsets.UTF_8.displayName())
         val topic = rc.queryParam("topic").first()
         vertx.eventBus().publish(topic, body)
         rc.response()
@@ -59,7 +60,6 @@ class StompBridgeVerticle : CoroutineVerticle() {
         .setPort(-1)
         .setWebsocketBridge(true)
         .setWebsocketPath("/stomp")
-
     ).handler(
       StompServerHandler.create(vertx).bridge(
         BridgeOptions()
