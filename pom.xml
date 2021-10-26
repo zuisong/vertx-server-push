@@ -6,11 +6,11 @@
   <artifactId>vertx-server-push</artifactId>
   <version>1.0.0</version>
   <properties>
-    <kotlin.version>1.5.0</kotlin.version>
-    <vertx.version>4.0.3</vertx.version>
-    <jackson-bom.version>2.12.3</jackson-bom.version>
+    <kotlin.version>1.5.31</kotlin.version>
+    <vertx.version>4.1.5</vertx.version>
+    <jackson-bom.version>2.13.0</jackson-bom.version>
 
-    <java.version>1.8</java.version>
+    <java.version>11</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.compilerVersion>${java.version}</maven.compiler.compilerVersion>
@@ -80,12 +80,12 @@
     <dependency>
       <groupId>io.github.microutils</groupId>
       <artifactId>kotlin-logging-jvm</artifactId>
-      <version>2.0.6</version>
+      <version>2.0.11</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.2.3</version>
+      <version>1.2.6</version>
     </dependency>
   </dependencies>
   <repositories>
@@ -99,7 +99,7 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>2.5.0</version>
+        <version>2.5.5</version>
         <configuration>
           <finalName>${project.artifactId}</finalName>
         </configuration>
@@ -174,9 +174,9 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>pl.project13.maven</groupId>
-        <artifactId>git-commit-id-plugin</artifactId>
-        <version>4.0.3</version>
+        <groupId>io.github.git-commit-id</groupId>
+        <artifactId>git-commit-id-maven-plugin</artifactId>
+        <version>5.0.0</version>
         <executions>
           <execution>
             <goals>
