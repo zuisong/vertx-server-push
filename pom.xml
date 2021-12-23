@@ -6,8 +6,8 @@
   <artifactId>vertx-server-push</artifactId>
   <version>1.0.0</version>
   <properties>
-    <kotlin.version>1.5.31</kotlin.version>
-    <vertx.version>4.1.5</vertx.version>
+    <kotlin.version>1.6.10</kotlin.version>
+    <vertx.version>4.2.2</vertx.version>
     <jackson-bom.version>2.13.0</jackson-bom.version>
 
     <java.version>11</java.version>
@@ -80,28 +80,22 @@
     <dependency>
       <groupId>io.github.microutils</groupId>
       <artifactId>kotlin-logging-jvm</artifactId>
-      <version>2.0.11</version>
+      <version>2.1.21</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.2.6</version>
+      <version>1.2.9</version>
     </dependency>
   </dependencies>
-  <repositories>
-    <repository>
-      <id>aliyun</id>
-      <url>https://maven.aliyun.com/repository/public</url>
-    </repository>
-  </repositories>
   <build>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>2.5.5</version>
+        <version>2.6.2</version>
         <configuration>
-          <finalName>${project.artifactId}</finalName>
+          <finalName>${build.finalName}</finalName>
         </configuration>
         <executions>
           <execution>
