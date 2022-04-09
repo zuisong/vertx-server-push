@@ -20,6 +20,7 @@ class StompBridgeVerticle : CoroutineVerticle() {
 
     val router = Router.router(vertx)
     router.route().handler(CorsHandler.create().allowCredentials(true))
+    router.route().handler(StaticHandler.create("static"))
     router.route().handler(ResponseTimeHandler.create())
     router.route().handler(BodyHandler.create())
     router.route().handler(LoggerHandler.create())

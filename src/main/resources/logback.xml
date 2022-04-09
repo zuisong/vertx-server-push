@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<configuration>
+<configuration debug="true" scan="true" scanPeriod="1 seconds">
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     <!-- 过滤掉 TRACE 和 DEBUG 级别的日志-->
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -7,7 +7,26 @@
       <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] %logger{20} - %msg%n</pattern>
     </encoder>
   </appender>
+
+  <appender name="FILE" append="true" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>./logs/log_file.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>/logs/log_file_%d{yyyy-mm-dd.HH}.log</fileNamePattern>
+      <maxHistory>30</maxHistory>
+      <totalSizeCap>1GB</totalSizeCap>
+    </rollingPolicy>
+
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <maxFileSize>100MB</maxFileSize>
+    </triggeringPolicy>
+
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] %logger{20} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
   <root level="INFO">
-    <appender-ref ref="CONSOLE"/>
+    <!--    <appender-ref ref="CONSOLE"/>-->
+    <appender-ref ref="FILE"/>
   </root>
 </configuration>

@@ -43,17 +43,15 @@
 <script type="application/javascript">
   $(function () {
     let stompClient;
-
+    const host = window.location.host
     const stompConfig = {
       // Typically login, passcode and vhost
       // Adjust these for your broker
       connectHeaders: {
-        login: "guest",
-        passcode: "guest"
       },
 
       // Broker URL, should start with ws:// or wss:// - adjust for your broker setup
-      brokerURL: "ws://localhost:13000/stomp",
+      brokerURL: `ws://${host}/stomp`,
 
       // Keep it off for production, it can be quit verbose
       // Skip this key to disable
