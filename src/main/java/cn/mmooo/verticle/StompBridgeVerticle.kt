@@ -16,14 +16,22 @@ class StompBridgeVerticle : CoroutineVerticle() {
 
   override suspend fun start() {
 
+    val port = System.getenv()["PUSH_PORT"]?.toIntOrNull() ?: 13000
+
     val server = createStompServer(vertx)
 
     val router = Router.router(vertx)
-    router.route().handler(CorsHandler.create().allowCredentials(true))
-    router.route().handler(StaticHandler.create("static"))
-    router.route().handler(ResponseTimeHandler.create())
-    router.route().handler(BodyHandler.create())
-    router.route().handler(LoggerHandler.create())
+    router.route()
+      .failureHandler(ErrorHandler.create(vertx))
+      .handler(CorsHandler.create().allowCredentials(true))
+      .handler(ResponseTimeHandler.create())
+      .handler(LoggerHandler.create())
+      .handler(BodyHandler.create())
+      .handler(StaticHandler.create("static"))
+
+    router.get("/health").handler { ctx ->
+      ctx.response().end("ok")
+    }
     router.post("/push")
       .handler { rc: RoutingContext ->
         val body = rc.getBodyAsString(Charsets.UTF_8.displayName())
@@ -46,9 +54,9 @@ class StompBridgeVerticle : CoroutineVerticle() {
     )
       .webSocketHandler(server.webSocketHandler())
       .requestHandler(router)
-      .listen(13000)
+      .listen(port)
       .onSuccess {
-        logger.info("websocket server listen at 13000")
+        logger.info("websocket server listen at ${port}")
       }
 
   }

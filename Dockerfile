@@ -1,18 +1,19 @@
 # 开始构建
-FROM zuisong-docker.pkg.coding.net/mirrors/docker/maven:3-jdk-11-slim As builder
-MAINTAINER zuisong
+FROM maven:3-jdk-11-slim As builder
 USER root
 RUN mkdir -p /code
-COPY . /code
+COPY ./ /code
 WORKDIR /code
-RUN  mvn clean package -D finalName=app
+ARG maven_repo
+RUN  mvn clean package -Djava.version=11 -Dbuild.finalName=app \
+ -Dmvn.repo.url=${maven_repo:-https://maven.aliyun.com/repository/public}
 #  构建完毕
 
 # 开始运行
-FROM zuisong-docker.pkg.coding.net/mirrors/docker/adoptopenjdk/openjdk11:slim
-MAINTAINER zuisong
-VOLUME /data
-WORKDIR /data
+FROM openjdk:11-slim as runner
+#COPY ./target/app.jar /home/app.jar
 COPY --from=builder /code/target/app.jar /home/app.jar
-EXPOSE 13000
-CMD ["java","-jar","/home/app.jar"]
+
+RUN apt update &&  apt install dumb-init -y
+ENTRYPOINT ["dumb-init", "--"]
+CMD  "java" $JAVA_OPTS -jar /home/app.jar

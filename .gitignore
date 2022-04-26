@@ -4,5 +4,6 @@ logs/
 target
 *.iml
 .*
+!.github/
 !.gitignore
 !.editorconfig
