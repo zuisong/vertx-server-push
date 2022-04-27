@@ -22,12 +22,25 @@ class StompBridgeVerticle : CoroutineVerticle() {
 
     val router = Router.router(vertx)
     router.route()
-      .failureHandler(ErrorHandler.create(vertx))
-      .handler(CorsHandler.create().allowCredentials(true))
-      .handler(ResponseTimeHandler.create())
-      .handler(LoggerHandler.create())
+      .failureHandler { rc ->
+        logger.error(rc.failure()) {}
+        rc.response()
+          .setStatusCode(500)
+          .end(rc.failure().message)
+      }
+      .handler(TimeoutHandler.create(10 * 1000))
       .handler(BodyHandler.create())
-      .handler(StaticHandler.create("static"))
+      .handler(CorsHandler.create().allowCredentials(true))
+      .handler(LoggerHandler.create())
+      .handler(ResponseTimeHandler.create())
+
+    router.get("/stomp-test.html").blockingHandler { ctx ->
+      Vertx::class.java.getResourceAsStream("/webroot/stomp-test.html")?.use {
+        it.bufferedReader().use {
+          ctx.response().end(it.readText())
+        }
+      }
+    }
 
     router.get("/health").handler { ctx ->
       ctx.response().end("ok")
@@ -40,11 +53,6 @@ class StompBridgeVerticle : CoroutineVerticle() {
         rc.response()
           .setStatusCode(200)
           .end("ok")
-      }
-      .failureHandler { rc ->
-        rc.response()
-          .setStatusCode(500)
-          .end(rc.failure().message)
       }
 
     vertx.createHttpServer(

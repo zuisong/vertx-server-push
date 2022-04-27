@@ -4,7 +4,7 @@ import cn.mmooo.verticle.*
 import io.vertx.core.*
 
 
-suspend fun main() {
+fun main() {
   val vertx = Vertx.vertx()
   vertx.deployVerticle(
     StompBridgeVerticle::class.java.name,

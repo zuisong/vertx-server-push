@@ -5,6 +5,7 @@
   <groupId>cn.mmooo</groupId>
   <artifactId>vertx-server-push</artifactId>
   <version>1.0.0</version>
+  <packaging>jar</packaging>
   <properties>
     <kotlin.version>1.6.21</kotlin.version>
     <vertx.version>4.2.6</vertx.version>
@@ -18,6 +19,16 @@
     <project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
     <maven.compiler.encoding>${project.encoding}</maven.compiler.encoding>
     <mvn.repo.url>https://repo1.maven.org/maven2/</mvn.repo.url>
+    <native.build.args>
+      -H:+PrintClassInitialization
+      -H:+ReportExceptionStackTraces
+      -Dio.netty.noUnsafe=true
+      --initialize-at-run-time=ch.qos.logback
+      --initialize-at-run-time=org.slf4j
+      --initialize-at-run-time=io.netty
+      --report-unsupported-elements-at-runtime
+    </native.build.args>
+    <main.class>cn.mmooo.MainKt</main.class>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -91,15 +102,8 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>2.6.2</version>
         <configuration>
-          <finalName>${build.finalName}</finalName>
+          <finalName>${project.build.finalName}</finalName>
         </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>repackage</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.jetbrains.kotlin</groupId>
@@ -195,4 +199,48 @@
       <url>${mvn.repo.url}</url>
     </pluginRepository>
   </pluginRepositories>
+  <profiles>
+    <profile>
+      <id>native</id>
+      <build>
+        <plugins>
+<!--          <plugin>-->
+<!--            <groupId>com.gluonhq</groupId>-->
+<!--            <artifactId>gluonfx-maven-plugin</artifactId>-->
+<!--            <version>1.0.13</version>-->
+<!--            <executions>-->
+<!--              <execution>-->
+<!--                <id>native</id>-->
+<!--                <goals>-->
+<!--                  <goal>compile</goal>-->
+<!--                </goals>-->
+<!--              </execution>-->
+<!--            </executions>-->
+<!--            <configuration>-->
+<!--              <mainClass>${main.class}</mainClass>-->
+<!--              <nativeImageArgs>${native.build.args}</nativeImageArgs>-->
+<!--            </configuration>-->
+<!--          </plugin>-->
+          <plugin>
+            <groupId>org.graalvm.buildtools</groupId>
+            <artifactId>native-maven-plugin</artifactId>
+            <version>0.9.11</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+                <phase>package</phase>
+              </execution>
+            </executions>
+            <configuration>
+              <imageName>${project.name}</imageName>
+              <mainClass>${main.class}</mainClass>
+              <buildArgs>${native.build.args}</buildArgs>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
