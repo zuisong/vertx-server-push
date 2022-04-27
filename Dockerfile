@@ -5,7 +5,7 @@ RUN mkdir -p /code
 COPY ./ /code
 WORKDIR /code
 ARG maven_repo
-RUN  mvn clean package -Djava.version=11 -Dbuild.finalName=app \
+RUN  mvn clean package -Djava.version=11 -Dproject.build.finalName=app \
  -Dmvn.repo.url=${maven_repo:-https://maven.aliyun.com/repository/public}
 #  构建完毕
 
