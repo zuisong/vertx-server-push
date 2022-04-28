@@ -1,7 +1,8 @@
 logs/
 
 .idea/
-target
+target/
+build/
 *.iml
 .*
 !.mvn/
