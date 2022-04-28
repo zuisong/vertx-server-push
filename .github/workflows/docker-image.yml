@@ -12,4 +12,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build the Docker image
-        run: docker build . -t vertx-server-push --build-arg maven_repo=https://repo1.maven.org/maven2/
+        run: docker build . -t vertx-server-push

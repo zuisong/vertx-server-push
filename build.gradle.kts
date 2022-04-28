@@ -35,15 +35,17 @@ java.sourceCompatibility = JavaVersion.VERSION_1_8
 java {
   withSourcesJar()
 }
-
 publishing {
   publications.create<MavenPublication>("maven") {
     from(components["java"])
   }
 }
 
-tasks.withType<JavaCompile>() {
-  options.encoding = "UTF-8"
+tasks.withType<JavaCompile> {
+  options.apply {
+    encoding = Charsets.UTF_8.displayName()
+    isDeprecation = true
+  }
 }
 application {
   mainClass.set("cn.mmooo.MainKt")

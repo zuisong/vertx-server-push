@@ -2,8 +2,8 @@ version: "3.9"
 services:
   vertx-server-push:
     pull_policy: missing
-    image: maven:3-jdk-11-slim
-    container_name: vertx-server-push
+    image: openjdk:11-slim
+    container_name: vertx-server-push-build
     ports:
       - "13000:80"
     environment:
@@ -22,7 +22,8 @@ services:
     volumes:
       - $PWD:/home/
       - $HOME/.m2:/root/.m2
-    command: mvn clean spring-boot:run
+      - $HOME/.gradle:/root/.gradle
+    command: ./gradlew runShadow
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost/health" ]
       interval: 1m30s
