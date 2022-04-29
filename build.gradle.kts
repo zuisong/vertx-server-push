@@ -3,7 +3,6 @@ plugins {
   application
   kotlin("jvm") version "1.6.21"
   id("com.github.johnrengelman.shadow") version "7.1.2"
-  `maven-publish`
 }
 repositories {
   mavenLocal()
@@ -35,11 +34,6 @@ java.sourceCompatibility = JavaVersion.VERSION_1_8
 java {
   withSourcesJar()
 }
-publishing {
-  publications.create<MavenPublication>("maven") {
-    from(components["java"])
-  }
-}
 
 tasks.withType<JavaCompile> {
   options.apply {
@@ -47,6 +41,7 @@ tasks.withType<JavaCompile> {
     isDeprecation = true
   }
 }
+
 application {
   mainClass.set("cn.mmooo.MainKt")
 }
