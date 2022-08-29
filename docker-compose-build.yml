@@ -2,7 +2,7 @@ version: "3.9"
 services:
   vertx-server-push:
     pull_policy: missing
-    image: openjdk:11-slim
+    image: openjdk:17-slim
     container_name: vertx-server-push-build
     ports:
       - "13000:80"

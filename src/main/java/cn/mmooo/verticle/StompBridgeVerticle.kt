@@ -15,29 +15,28 @@ private val logger = KotlinLogging.logger { }
 class StompBridgeVerticle : CoroutineVerticle() {
 
   override suspend fun start() {
-
     val port = System.getenv()["PUSH_PORT"]?.toIntOrNull() ?: 13000
 
     val server = createStompServer(vertx)
 
     val router = Router.router(vertx)
     router.route()
+      .handler(LoggerHandler.create())
+      .handler(ResponseTimeHandler.create())
+      .handler(TimeoutHandler.create(10 * 1000))
+      .handler(CorsHandler.create().allowCredentials(true))
+      .handler(BodyHandler.create())
       .failureHandler { rc ->
         logger.error(rc.failure()) {}
         rc.response()
           .setStatusCode(500)
           .end(rc.failure().message)
       }
-      .handler(TimeoutHandler.create(10 * 1000))
-      .handler(BodyHandler.create())
-      .handler(CorsHandler.create().allowCredentials(true))
-      .handler(LoggerHandler.create())
-      .handler(ResponseTimeHandler.create())
 
     router.get("/stomp-test.html").blockingHandler { ctx ->
-      Vertx::class.java.getResourceAsStream("/webroot/stomp-test.html")?.use {
-        it.bufferedReader().use {
-          ctx.response().end(it.readText())
+      Vertx::class.java.getResourceAsStream("/webroot/stomp-test.html")?.use { inputStream ->
+        inputStream.bufferedReader().use { reader ->
+          ctx.response().end(reader.readText())
         }
       }
     }
@@ -47,7 +46,7 @@ class StompBridgeVerticle : CoroutineVerticle() {
     }
     router.post("/push")
       .handler { rc: RoutingContext ->
-        val body = rc.getBodyAsString(Charsets.UTF_8.displayName())
+        val body = rc.body().asString(Charsets.UTF_8.displayName())
         val topic = rc.queryParam("topic").first()
         vertx.eventBus().publish(topic, body)
         rc.response()
@@ -64,7 +63,7 @@ class StompBridgeVerticle : CoroutineVerticle() {
       .requestHandler(router)
       .listen(port)
       .onSuccess {
-        logger.info("websocket server listen at ${port}")
+        logger.info("websocket server listen at $port")
       }
 
   }
