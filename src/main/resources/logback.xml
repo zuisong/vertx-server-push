@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration scan="false" scanPeriod="1 seconds">
+  <property name="LOG_FILE" value="log_file"/>
 
-  <appender name="JSON_FILE" append="true" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-      <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
-        <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
-          <prettyPrint>false</prettyPrint>
-        </jsonFormatter>
-
-        <timestampFormat>yyyy-MM-dd'T'HH:mm:ss.SSSZZ</timestampFormat>
-        <timestampFormatTimezoneId>Etc/UTC</timestampFormatTimezoneId>
-        <appendLineSeparator>true</appendLineSeparator>
-      </layout>
-    </encoder>
-
-    <file>./logs/log_file.log</file>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>/logs/log_file_%d{yyyy-mm-dd.HH}.log</fileNamePattern>
-      <maxHistory>30</maxHistory>
-      <totalSizeCap>1GB</totalSizeCap>
-    </rollingPolicy>
-
-    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-      <maxFileSize>100MB</maxFileSize>
-    </triggeringPolicy>
-  </appender>
-
-
-  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-    <!-- 过滤掉 TRACE 和 DEBUG 级别的日志-->
+  <appender name="JsonConsole" class="ch.qos.logback.core.ConsoleAppender">
     <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
       <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
       <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5level] [%thread] %logger{20} - %msg%n</pattern>
     </encoder>
   </appender>
 
-  <root level="info">
-    <appender-ref ref="CONSOLE"/>
-    <appender-ref ref="JSON_FILE"/>
+  <appender name="JsonRollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+    <file>./logs/${LOG_FILE}.log</file>
+
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+      <fieldNames>
+        <timestamp>timestamp</timestamp>
+        <thread>thread</thread>
+        <stackTrace>exception</stackTrace>
+        <version>[ignore]</version>
+      </fieldNames>
+    </encoder>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.gz</fileNamePattern>
+      <maxHistory>30</maxHistory>
+      <totalSizeCap>3GB</totalSizeCap>
+    </rollingPolicy>
+
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <maxFileSize>3GB</maxFileSize>
+    </triggeringPolicy>
+
+  </appender>
+
+  <root level="DEBUG">
+    <appender-ref ref="JsonConsole"/>
+    <appender-ref ref="JsonRollingFile"/>
   </root>
+
 </configuration>
