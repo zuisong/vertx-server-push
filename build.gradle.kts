@@ -22,8 +22,13 @@ dependencies {
   implementation("io.vertx:vertx-web")
   implementation("io.vertx:vertx-lang-kotlin-coroutines")
   implementation("io.vertx:vertx-stomp")
-  implementation("io.github.microutils:kotlin-logging-jvm:2.1.23")
-  implementation("ch.qos.logback:logback-classic:1.2.11")
+  implementation("io.github.microutils:kotlin-logging-jvm:3.0.0")
+  implementation("ch.qos.logback:logback-classic:1.4.1")
+  val logback_json_version = "0.1.5"
+  implementation("ch.qos.logback.contrib:logback-jackson:$logback_json_version")
+  implementation("ch.qos.logback.contrib:logback-json-classic:$logback_json_version")
+
+
 }
 
 group = "cn.mmooo"

@@ -44,6 +44,7 @@ class StompBridgeVerticle : CoroutineVerticle() {
     router.get("/health").handler { ctx ->
       ctx.response().end("ok")
     }
+
     router.post("/push")
       .handler { rc: RoutingContext ->
         val body = rc.body().asString(Charsets.UTF_8.displayName())
@@ -54,11 +55,12 @@ class StompBridgeVerticle : CoroutineVerticle() {
           .end("ok")
       }
 
-    vertx.createHttpServer(
-      HttpServerOptions().apply {
-        webSocketSubProtocols = listOf("v10.stomp", "v11.stomp")
-      }
-    )
+    vertx
+      .createHttpServer(
+        HttpServerOptions().apply {
+          webSocketSubProtocols = listOf("v10.stomp", "v11.stomp")
+        }
+      )
       .webSocketHandler(server.webSocketHandler())
       .requestHandler(router)
       .listen(port)
