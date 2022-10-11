@@ -1,7 +1,9 @@
+import org.jetbrains.kotlin.gradle.tasks.*
+
 plugins {
   java
   application
-  kotlin("jvm") version "1.7.10"
+  kotlin("jvm") version "1.7.20"
   id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 repositories {
@@ -11,8 +13,8 @@ repositories {
 }
 
 dependencies {
-  implementation(platform("io.vertx:vertx-dependencies:4.3.3"))
-  implementation(enforcedPlatform("org.jetbrains.kotlin:kotlin-bom:1.7.10"))
+  implementation(platform("io.vertx:vertx-dependencies:4.3.4"))
+  implementation(enforcedPlatform("org.jetbrains.kotlin:kotlin-bom:1.7.20"))
   implementation(enforcedPlatform("com.fasterxml.jackson:jackson-bom:2.13.3"))
 
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -23,10 +25,8 @@ dependencies {
   implementation("io.vertx:vertx-lang-kotlin-coroutines")
   implementation("io.vertx:vertx-stomp")
   implementation("io.github.microutils:kotlin-logging-jvm:3.0.0")
-  implementation("ch.qos.logback:logback-classic:1.4.1")
+  implementation("ch.qos.logback:logback-classic:1.4.3")
   implementation("net.logstash.logback:logstash-logback-encoder:7.2")
-
-
 }
 
 group = "cn.mmooo"
@@ -47,5 +47,10 @@ tasks.withType<JavaCompile> {
 
 application {
   mainClass.set("cn.mmooo.MainKt")
+}
+
+
+tasks.withType<KotlinCompile> {
+  kotlinOptions.useK2 = true
 }
 
