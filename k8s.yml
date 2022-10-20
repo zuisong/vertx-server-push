@@ -1,0 +1,142 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vertx-server-push
+spec:
+  ports:
+    - name: http
+      targetPort: 8080
+      protocol: TCP
+      port: 80
+  selector:
+    app: vertx-server-push
+---
+#kind: PersistentVolumeClaim
+#apiVersion: v1
+#metadata:
+#  name: vertx-server-push-init-script
+#spec:
+#  accessModes:
+#    - ReadWriteOnce
+#  volumeMode: Filesystem
+#  resources:
+#    requests:
+#      storage: 50Mi
+---
+#apiVersion: autoscaling/v2
+#kind: HorizontalPodAutoscaler
+#metadata:
+#  name: vertx-server-push
+#spec:
+#  scaleTargetRef:
+#    apiVersion: apps/v1
+#    kind: Deployment
+#    name: vertx-server-push
+#  minReplicas: 1
+#  maxReplicas: 3
+#  metrics:
+#    - type: Resource
+#      resource:
+#        name: cpu
+#        target:
+#          type: Utilization
+#          averageUtilization: 50
+#    - type: Resource
+#      resource:
+#        name: memory
+#        target:
+#          type: Utilization
+#          averageUtilization: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vertx-server-push
+spec:
+  selector:
+    matchLabels:
+      app: vertx-server-push
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: vertx-server-push
+    spec:
+      restartPolicy: Always
+      shareProcessNamespace: true
+      containers:
+        - name: vertx-server-push
+          image: ghcr.io/zuisong/vertx-server-push:latest
+          startupProbe:
+            httpGet:
+              port: 8080
+              path: /health
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /health
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /health
+          resources:
+            requests:
+              memory: 350Mi
+              cpu: 200m
+            limits:
+              memory: 500Mi
+          #              cpu: 1000m
+          env:
+            - name: PUSH_PORT
+              value: "8080"
+            #            - name: OTEL_LOGS_EXPORTER
+            #              value: logging
+            #            - name: OTEL_METRICS_EXPORTER
+            #              value: logging
+            #            - name: OTEL_TRACES_EXPORTER
+            #              value: logging
+            #            - name: OTEL_EXPORTER_OTLP_PROTOCOL
+            #              value: grpc
+            #            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            #              value: http://grafana-agent:4317
+            #            - name: OTEL_EXPORTER_JAEGER_ENDPOINT
+            #              value: http://10.42.0.14:14250
+            #            - name: OTEL_TRACES_EXPORTER
+            #              value: jaeger
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: service.name=vertx-server-push
+
+            - name: TZ
+              value: Asia/Shanghai
+            - name: JAVA_OPTS
+              value: |
+                -XX:+HeapDumpOnOutOfMemoryError
+                -XX:HeapDumpPath="./"
+                -XX:MaxRAMPercentage=90.0
+          ports:
+#            - containerPort: 8088
+#              protocol: TCP
+#              name: jmx-metrics
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+#          volumeMounts:
+#            - mountPath: /logback-config/
+#              name: logback-config
+#              readOnly: true
+#            - name: vertx-server-push-init-script
+#              mountPath: /java-agent-files/
+#              readOnly: true
+#      volumes:
+#        - name: vertx-server-push-init-script
+#          persistentVolumeClaim:
+#            claimName: vertx-server-push-init-script
+#        - name: logback-config
+#          configMap:
+#            name: logback-config
+
