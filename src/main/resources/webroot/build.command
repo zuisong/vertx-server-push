@@ -1,0 +1,1 @@
+deno run -A npm:esbuild  stomp-test.mts  --outfile=stomp-test.mjs

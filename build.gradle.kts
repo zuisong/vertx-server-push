@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.*
 plugins {
   java
   application
-  kotlin("jvm") version "1.7.20"
+  kotlin("jvm") version "1.8.10"
   id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 repositories {
@@ -13,8 +13,8 @@ repositories {
 }
 
 dependencies {
-  implementation(platform("io.vertx:vertx-dependencies:4.3.7"))
-  implementation(enforcedPlatform("org.jetbrains.kotlin:kotlin-bom:1.7.20"))
+  implementation(platform("io.vertx:vertx-dependencies:4.4.0"))
+  implementation(enforcedPlatform("org.jetbrains.kotlin:kotlin-bom:1.8.10"))
   implementation(enforcedPlatform("com.fasterxml.jackson:jackson-bom:2.14.1"))
 
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -53,6 +53,5 @@ application {
 
 
 tasks.withType<KotlinCompile> {
-  kotlinOptions.useK2 = true
   kotlinOptions.jvmTarget = javaVersion.toString()
 }
