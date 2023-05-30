@@ -1,17 +1,18 @@
 # 开始构建
-FROM openjdk:17-slim As builder
+FROM ghcr.io/graalvm/graalvm-ce:ol9-java17 As builder
 USER root
+RUN microdnf install -y findutils
 RUN mkdir -p /code
 COPY ./ /code
 WORKDIR /code
 ARG maven_repo
-RUN ./gradlew shadowjar
+RUN ./gradlew nativeCompile
 #  构建完毕
 
 # 开始运行
-FROM openjdk:17-slim as runner
+FROM ubuntu:latest as runner
 #COPY ./target/app.jar /home/app.jar
-COPY --from=builder /code/build/libs/*-all.jar /home/app.jar
+COPY --from=builder /code/build/native/nativeCompile/vertx-server-push /home/app
 RUN apt update &&  apt install dumb-init -y
 ENTRYPOINT ["dumb-init", "--"]
-CMD  "java" $JAVA_OPTS -jar /home/app.jar
+CMD /home/app

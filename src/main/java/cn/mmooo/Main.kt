@@ -8,9 +8,7 @@ private val logger = KotlinLogging.logger { }
 
 fun main() {
   val vertx = Vertx.vertx(VertxOptions())
-  vertx.deployVerticle(
-    { StompBridgeVerticle() },
-    DeploymentOptions().apply {
+  vertx.deployVerticle({ StompBridgeVerticle() }, DeploymentOptions().apply {
       instances = 8
     })
 

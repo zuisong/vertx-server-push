@@ -1,10 +1,12 @@
+import org.graalvm.buildtools.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.tasks.*
 
 plugins {
   java
   application
-  kotlin("jvm") version "1.8.10"
+  kotlin("jvm") version "1.8.20"
   id("com.github.johnrengelman.shadow") version "7.1.2"
+  id("org.graalvm.buildtools.native") version "0.9.22"
 }
 repositories {
   mavenLocal()
@@ -13,9 +15,9 @@ repositories {
 }
 
 dependencies {
-  implementation(platform("io.vertx:vertx-dependencies:4.4.0"))
-  implementation(enforcedPlatform("org.jetbrains.kotlin:kotlin-bom:1.8.10"))
-  implementation(enforcedPlatform("com.fasterxml.jackson:jackson-bom:2.14.1"))
+  implementation(platform("io.vertx:vertx-dependencies:4.4.2"))
+  implementation(enforcedPlatform("org.jetbrains.kotlin:kotlin-bom:1.8.20"))
+  implementation(enforcedPlatform("com.fasterxml.jackson:jackson-bom:2.15.2"))
 
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
   implementation("com.fasterxml.jackson.core:jackson-databind")
@@ -24,9 +26,9 @@ dependencies {
   implementation("io.vertx:vertx-web")
   implementation("io.vertx:vertx-lang-kotlin-coroutines")
   implementation("io.vertx:vertx-stomp")
-  implementation("io.github.microutils:kotlin-logging:3.0.4")
+  implementation("io.github.microutils:kotlin-logging:3.0.5")
   implementation("ch.qos.logback:logback-classic:1.4.5")
-  implementation("net.logstash.logback:logstash-logback-encoder:7.2")
+//  implementation("net.logstash.logback:logstash-logback-encoder:7.3")
 }
 
 group = "cn.mmooo"
@@ -54,4 +56,18 @@ application {
 
 tasks.withType<KotlinCompile> {
   kotlinOptions.jvmTarget = javaVersion.toString()
+}
+
+graalvmNative {
+  binaries {
+    named("main")<NativeImageOptions> {
+      javaLauncher.set(javaToolchains.launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(javaVersion.majorVersion))
+      })
+
+      resources {
+        autodetect()
+      }
+    }
+  }
 }
