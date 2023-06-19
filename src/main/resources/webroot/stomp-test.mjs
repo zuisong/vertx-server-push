@@ -19,7 +19,7 @@ function onPageReady() {
     reconnectDelay: 200,
     // Subscriptions should be done inside onConnect as those need to reinstated when the broker reconnects
     onConnect: function(frame) {
-      const subscription = stompClient.subscribe("/topic/chat", function(message) {
+      const subscription = stompClient.subscribe("/topic/chat", (message) => {
         const payload = JSON.parse(message.body);
         displayIncomingMessage(payload.user, payload.message);
       });
@@ -60,7 +60,7 @@ function onPageReady() {
   }
   function displayIncomingMessage(user, message) {
     const msgDiv = $("<div>").addClass("msgln");
-    msgDiv.html('<span class="user">[' + user + ']: </span><span class="message">' + message + "</span>");
+    msgDiv.html(`<span class="user">[${user}]: </span><span class="message">${message}</span>`);
     $("#chatbox").append(msgDiv);
   }
 }

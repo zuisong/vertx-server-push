@@ -1,5 +1,5 @@
 // @ts-ignore
-import { Client, StompConfig } from 'https://esm.sh/@stomp/stompjs@7'
+import { Client, IFrame, IMessage, StompConfig } from 'https://esm.sh/@stomp/stompjs@7'
 // @ts-ignore
 import cash from "https://esm.sh/cash-dom@8.1.4"
 
@@ -18,7 +18,7 @@ function onPageReady() {
 
     // Keep it off for production, it can be quit verbose
     // Skip this key to disable
-    debug: function (str) {
+    debug: function (str: string) {
       console.log('STOMP: ' + str);
     },
 
@@ -26,9 +26,9 @@ function onPageReady() {
     reconnectDelay: 200,
 
     // Subscriptions should be done inside onConnect as those need to reinstated when the broker reconnects
-    onConnect: function (frame) {
+    onConnect: function (frame: IFrame) {
       // The return object has a method called `unsubscribe`
-      const subscription = stompClient.subscribe('/topic/chat', function (message) {
+      const subscription = stompClient.subscribe('/topic/chat', (message: IMessage) => {
         const payload = JSON.parse(message.body);
         displayIncomingMessage(payload.user, payload.message);
       });
@@ -79,8 +79,7 @@ function onPageReady() {
           body: JSON.stringify(payLoad),
         }
       )
-        .then(_ => {
-        }, err => console.error(err))
+        .then(_ => { }, err => console.error(err))
 
     }
     return true;
@@ -88,7 +87,7 @@ function onPageReady() {
 
   function displayIncomingMessage(user: string, message: string) {
     const msgDiv = $("<div>").addClass("msgln");
-    msgDiv.html('<span class="user">[' + user + ']: </span><span class="message">' + message + '</span>');
+    msgDiv.html(`<span class="user">[${user}]: </span><span class="message">${message}</span>`);
     $("#chatbox").append(msgDiv);
   }
 }

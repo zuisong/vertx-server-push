@@ -1,4 +1,3 @@
-import org.graalvm.buildtools.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.tasks.*
 
 plugins {
@@ -56,18 +55,4 @@ application {
 
 tasks.withType<KotlinCompile> {
   kotlinOptions.jvmTarget = javaVersion.toString()
-}
-
-graalvmNative {
-  binaries {
-    named("main")<NativeImageOptions> {
-      javaLauncher.set(javaToolchains.launcherFor {
-        languageVersion.set(JavaLanguageVersion.of(javaVersion.majorVersion))
-      })
-
-      resources {
-        autodetect()
-      }
-    }
-  }
 }

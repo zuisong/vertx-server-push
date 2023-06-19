@@ -34,14 +34,6 @@ class StompBridgeVerticle : CoroutineVerticle() {
           .end(rc.failure().message)
       }
 
-//    router.get("/stomp-test.html").blockingHandler { ctx ->
-//      Vertx::class.java.getResourceAsStream("/webroot/stomp-test.html")?.use { inputStream ->
-//        inputStream.bufferedReader().use { reader ->
-//          ctx.response().end(reader.readText())
-//        }
-//      }
-//    }
-
     router.get("/health").handler { ctx ->
       ctx.response().end("ok")
     }
