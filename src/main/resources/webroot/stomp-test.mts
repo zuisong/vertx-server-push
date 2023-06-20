@@ -1,13 +1,16 @@
 // @ts-ignore
-import { Client, IFrame, IMessage, StompConfig } from 'https://esm.sh/@stomp/stompjs@7'
+import {
+  Client,
+  IFrame,
+  IMessage,
+  StompConfig,
+} from "https://esm.sh/@stomp/stompjs@7";
 // @ts-ignore
-import cash from "https://esm.sh/cash-dom@8.1.4"
-
-const $ = cash
+import $ from "https://esm.sh/cash-dom@8.1.4";
 
 function onPageReady() {
   let stompClient: Client;
-  const host = window.location.host
+  const host = window.location.host;
   const stompConfig: StompConfig = {
     // Typically login, passcode and vhost
     // Adjust these for your broker
@@ -19,7 +22,7 @@ function onPageReady() {
     // Keep it off for production, it can be quit verbose
     // Skip this key to disable
     debug: function (str: string) {
-      console.log('STOMP: ' + str);
+      console.log("STOMP: " + str);
     },
 
     // If disconnected, it will retry after 200ms
@@ -28,11 +31,14 @@ function onPageReady() {
     // Subscriptions should be done inside onConnect as those need to reinstated when the broker reconnects
     onConnect: function (frame: IFrame) {
       // The return object has a method called `unsubscribe`
-      const subscription = stompClient.subscribe('/topic/chat', (message: IMessage) => {
-        const payload = JSON.parse(message.body);
-        displayIncomingMessage(payload.user, payload.message);
-      });
-    }
+      const subscription = stompClient.subscribe(
+        "/topic/chat",
+        (message: IMessage) => {
+          const payload = JSON.parse(message.body);
+          displayIncomingMessage(payload.user, payload.message);
+        },
+      );
+    },
   };
 
   // Create an instance
@@ -47,11 +53,15 @@ function onPageReady() {
   $("#username").val("User " + Math.round(Math.random() * 100));
 
   function sendMessage() {
-    if (publishMessage($("#username").val() as string, $("#usermsg").val() as string)) {
+    if (
+      publishMessage(
+        $("#username").val() as string,
+        $("#usermsg").val() as string,
+      )
+    ) {
       clearMessageInput();
     }
   }
-
 
   // Set the DOM event handlers must not be inside onConnect - other for each reconnect it will keep getting added
   $("#submitmsg").on("click", sendMessage);
@@ -74,22 +84,23 @@ function onPageReady() {
         {
           method: "post",
           headers: {
-            'content-type': 'application/json'
+            "content-type": "application/json",
           },
           body: JSON.stringify(payLoad),
-        }
+        },
       )
-        .then(_ => { }, err => console.error(err))
-
+        .then((_) => {}, (err) => console.error(err));
     }
     return true;
   }
 
   function displayIncomingMessage(user: string, message: string) {
     const msgDiv = $("<div>").addClass("msgln");
-    msgDiv.html(`<span class="user">[${user}]: </span><span class="message">${message}</span>`);
+    msgDiv.html(
+      `<span class="user">[${user}]: </span><span class="message">${message}</span>`,
+    );
     $("#chatbox").append(msgDiv);
   }
 }
 
-$(onPageReady)
+$(onPageReady);

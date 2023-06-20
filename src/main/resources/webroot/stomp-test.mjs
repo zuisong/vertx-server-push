@@ -1,6 +1,7 @@
-import { Client } from "https://esm.sh/@stomp/stompjs@7";
-import cash from "https://esm.sh/cash-dom@8.1.4";
-const $ = cash;
+import {
+  Client
+} from "https://esm.sh/@stomp/stompjs@7";
+import $ from "https://esm.sh/cash-dom@8.1.4";
 function onPageReady() {
   let stompClient;
   const host = window.location.host;
@@ -19,17 +20,23 @@ function onPageReady() {
     reconnectDelay: 200,
     // Subscriptions should be done inside onConnect as those need to reinstated when the broker reconnects
     onConnect: function(frame) {
-      const subscription = stompClient.subscribe("/topic/chat", (message) => {
-        const payload = JSON.parse(message.body);
-        displayIncomingMessage(payload.user, payload.message);
-      });
+      const subscription = stompClient.subscribe(
+        "/topic/chat",
+        (message) => {
+          const payload = JSON.parse(message.body);
+          displayIncomingMessage(payload.user, payload.message);
+        }
+      );
     }
   };
   stompClient = new Client(stompConfig);
   stompClient.activate();
   $("#username").val("User " + Math.round(Math.random() * 100));
   function sendMessage() {
-    if (publishMessage($("#username").val(), $("#usermsg").val())) {
+    if (publishMessage(
+      $("#username").val(),
+      $("#usermsg").val()
+    )) {
       clearMessageInput();
     }
   }
@@ -60,7 +67,9 @@ function onPageReady() {
   }
   function displayIncomingMessage(user, message) {
     const msgDiv = $("<div>").addClass("msgln");
-    msgDiv.html(`<span class="user">[${user}]: </span><span class="message">${message}</span>`);
+    msgDiv.html(
+      `<span class="user">[${user}]: </span><span class="message">${message}</span>`
+    );
     $("#chatbox").append(msgDiv);
   }
 }
