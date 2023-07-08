@@ -56,3 +56,13 @@ application {
 tasks.withType<KotlinCompile> {
   kotlinOptions.jvmTarget = javaVersion.toString()
 }
+
+graalvmNative {
+  binaries {
+    named("main") {
+      javaLauncher.set(javaToolchains.launcherFor {
+//        languageVersion.set(JavaLanguageVersion.of(javaVersion.majorVersion))
+      })
+    }
+  }
+}
