@@ -3,9 +3,9 @@ import org.jetbrains.kotlin.gradle.tasks.*
 plugins {
   java
   application
-  kotlin("jvm") version "1.8.20"
-  id("com.github.johnrengelman.shadow") version "7.1.2"
-  id("org.graalvm.buildtools.native") version "0.9.22"
+  kotlin("jvm") version "1.9.10"
+  id("com.github.johnrengelman.shadow") version "8.1.1"
+  id("org.graalvm.buildtools.native") version "0.9.27"
 }
 repositories {
   mavenLocal()
@@ -14,8 +14,8 @@ repositories {
 }
 
 dependencies {
-  implementation(platform("io.vertx:vertx-dependencies:4.4.2"))
-  implementation(enforcedPlatform("org.jetbrains.kotlin:kotlin-bom:1.8.20"))
+  implementation(platform("io.vertx:vertx-dependencies:4.4.5"))
+  implementation(enforcedPlatform("org.jetbrains.kotlin:kotlin-bom:1.9.10"))
   implementation(enforcedPlatform("com.fasterxml.jackson:jackson-bom:2.15.2"))
 
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -58,11 +58,8 @@ tasks.withType<KotlinCompile> {
 }
 
 graalvmNative {
-  binaries {
-    named("main") {
-      javaLauncher.set(javaToolchains.launcherFor {
-//        languageVersion.set(JavaLanguageVersion.of(javaVersion.majorVersion))
-      })
-    }
+  binaries.all {
+    resources.autodetect()
   }
+  toolchainDetection.set(true)
 }
