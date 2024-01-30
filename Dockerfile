@@ -1,11 +1,11 @@
 # 开始构建
-FROM vegardit/graalvm-maven:21.0.2 As builder
+FROM container-registry.oracle.com/graalvm/native-image:21 As builder
 USER root
 RUN mkdir -p /code
 COPY ./ /code
 WORKDIR /code
 ARG maven_repo
-RUN mvn clean compile native:build -Pnative
+RUN ./mvnw clean compile native:build -Pnative
 #  构建完毕
 
 # 开始运行

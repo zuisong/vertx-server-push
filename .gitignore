@@ -6,7 +6,8 @@ target/
 build/
 *.iml
 .*
-!.mvn/
+!.mvn
+.mvn/wrapper/maven-wrapper.jar
 !.github/
 !.gitignore
 !.editorconfig
