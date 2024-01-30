@@ -1,0 +1,26 @@
+module cn.mmooo
+{
+    requires java.se;
+    requires jdk.net;
+    requires kotlin.reflect;
+    requires kotlin.stdlib;
+    requires org.slf4j;
+    requires org.apache.logging.log4j.slf4j2.impl;
+    requires io.vertx.core;
+//    requires io.vertx.kotlin.coroutines;
+    requires com.hazelcast.core;
+    requires io.vertx.clustermanager.hazelcast;
+    requires io.vertx.web;
+    requires io.vertx.stomp;
+    requires io.vertx.eventbusbridge.common;
+    requires com.fasterxml.jackson.kotlin;
+    requires io.netty.handler;
+    requires io.netty.common;
+    requires io.netty.resolver.dns;
+    requires io.netty.codec.dns;
+    requires org.apache.logging.log4j;
+    requires com.fasterxml.jackson.databind;
+//    exports org.apache.logging.log4j to com.fasterxml.jackson.databind;
+//    opens org.apache.logging.log4j.core.jackson;
+//    exports cn.mmooo;
+}

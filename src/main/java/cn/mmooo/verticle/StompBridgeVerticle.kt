@@ -1,20 +1,19 @@
 package cn.mmooo.verticle
 
 import io.vertx.core.*
-import io.vertx.core.http.*
-import io.vertx.ext.bridge.*
+import io.vertx.core.http.HttpServerOptions
+import io.vertx.ext.bridge.PermittedOptions
 import io.vertx.ext.stomp.*
-import io.vertx.ext.stomp.BridgeOptions
 import io.vertx.ext.web.*
 import io.vertx.ext.web.handler.*
-import io.vertx.kotlin.coroutines.*
-import mu.*
+import org.slf4j.LoggerFactory
 
-private val logger = KotlinLogging.logger { }
 
-class StompBridgeVerticle : CoroutineVerticle() {
+private val logger = LoggerFactory.getLogger(StompBridgeVerticle::class.java)
 
-  override suspend fun start() {
+class StompBridgeVerticle : AbstractVerticle() {
+
+  override fun start() {
     val port = System.getenv()["PUSH_PORT"]?.toIntOrNull() ?: 13000
 
     val server = createStompServer(vertx)
@@ -28,7 +27,7 @@ class StompBridgeVerticle : CoroutineVerticle() {
       .handler(BodyHandler.create())
       .handler(StaticHandler.create())
       .failureHandler { rc ->
-        logger.error(rc.failure()) {}
+        logger.atError().setCause(rc.failure()).log()
         rc.response()
           .setStatusCode(500)
           .end(rc.failure().message)
@@ -43,24 +42,22 @@ class StompBridgeVerticle : CoroutineVerticle() {
         val body = rc.body().asString(Charsets.UTF_8.displayName())
         val topic = rc.queryParam("topic").first()
         vertx.eventBus().publish(topic, body)
-        rc.response()
-          .setStatusCode(200)
-          .end("ok")
+        logger.atInfo().log { "OK" }
+        rc.response().end("ok")
       }
 
     vertx
       .createHttpServer(
-        HttpServerOptions().apply {
-          webSocketSubProtocols = listOf("v10.stomp", "v11.stomp")
+        HttpServerOptions().also {
+          it.webSocketSubProtocols = listOf("v10.stomp", "v11.stomp", "v12.stomp")
         }
       )
       .webSocketHandler(server.webSocketHandler())
       .requestHandler(router)
       .listen(port)
       .onSuccess {
-        logger.info("websocket server listen at $port")
+        logger.atInfo().log { "websocket server listen at $port" }
       }
-
   }
 
 

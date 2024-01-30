@@ -1,17 +1,23 @@
 package cn.mmooo
 
-import cn.mmooo.verticle.*
+import cn.mmooo.verticle.StompBridgeVerticle
 import io.vertx.core.*
-import mu.*
+import org.slf4j.LoggerFactory
 
-private val logger = KotlinLogging.logger { }
+
+private val logger = LoggerFactory.getLogger("MainKt")
 
 fun main() {
-  val vertx = Vertx.vertx(VertxOptions())
-  vertx.deployVerticle({ StompBridgeVerticle() }, DeploymentOptions().apply {
-      instances = 8
-    })
+    System.setProperty("hazelcast.logging.type", "slf4j")
 
-  logger.info { "application started" }
+    val vertx = Vertx.vertx(VertxOptions())
 
+    vertx.runOnContext {
+        vertx.deployVerticle({ StompBridgeVerticle() }, DeploymentOptions().also {
+            it.threadingModel = ThreadingModel.VIRTUAL_THREAD
+            it.workerPoolSize = 10
+            it.instances = 8
+        })
+    }
+    logger.atInfo().log { "application started" }
 }
