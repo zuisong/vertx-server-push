@@ -1,17 +1,22 @@
 package cn.mmooo.verticle
 
-import io.vertx.core.*
+import io.vertx.core.AbstractVerticle
+import io.vertx.core.Vertx
 import io.vertx.core.http.HttpServerOptions
 import io.vertx.ext.bridge.PermittedOptions
-import io.vertx.ext.stomp.*
-import io.vertx.ext.web.*
+import io.vertx.ext.stomp.BridgeOptions
+import io.vertx.ext.stomp.StompServer
+import io.vertx.ext.stomp.StompServerHandler
+import io.vertx.ext.stomp.StompServerOptions
+import io.vertx.ext.web.Router
+import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.*
 import org.slf4j.LoggerFactory
 
 
-private val logger = LoggerFactory.getLogger(StompBridgeVerticle::class.java)
-
 class StompBridgeVerticle : AbstractVerticle() {
+
+  private val logger = LoggerFactory.getLogger(StompBridgeVerticle::class.java)
 
   override fun start() {
     val port = System.getenv()["PUSH_PORT"]?.toIntOrNull() ?: 13000
@@ -42,7 +47,7 @@ class StompBridgeVerticle : AbstractVerticle() {
         val body = rc.body().asString(Charsets.UTF_8.displayName())
         val topic = rc.queryParam("topic").first()
         vertx.eventBus().publish(topic, body)
-        logger.atInfo().log { "OK" }
+        logger.atInfo().log("OK")
         rc.response().end("ok")
       }
 

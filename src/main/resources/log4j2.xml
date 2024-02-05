@@ -77,8 +77,8 @@
     <Loggers>
         <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
         <!--        <Logger name="io.vertx" level="INFO"/>-->
-        <Logger name="io.netty" level="INFO"/>
-        <Logger name="com.hazelcast" level="info"/>
+<!--        <Logger name="io.netty" level="INFO"/>-->
+<!--        <Logger name="com.hazelcast" level="info"/>-->
         <Root level="all">
             <AppenderRef ref="ConsoleJson"/>
             <!--            <appender-ref ref="RollingFileInfo"/>-->
