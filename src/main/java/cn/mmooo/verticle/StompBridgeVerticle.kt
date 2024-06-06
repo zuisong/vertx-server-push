@@ -61,7 +61,7 @@ class StompBridgeVerticle : AbstractVerticle() {
       .requestHandler(router)
       .listen(port)
       .onSuccess {
-        logger.atInfo().log { "websocket server listen at $port" }
+        logger.info( "websocket server listen at {}", port )
       }
   }
 
