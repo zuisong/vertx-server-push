@@ -4,13 +4,14 @@ import cn.mmooo.verticle.StompBridgeVerticle
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
 import io.vertx.core.VertxOptions
-import org.slf4j.LoggerFactory
 
 
-private val logger = LoggerFactory.getLogger("MainKt")
 
 fun main() {
-  System.setProperty("hazelcast.logging.type", "slf4j")
+//System.setProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager");
+  val logger = System.getLogger("main")
+
+  System.setProperty("hazelcast.logging.type", "jul")
 
   val vertx = Vertx.vertx(VertxOptions())
 
@@ -20,6 +21,6 @@ fun main() {
       it.workerPoolSize = 10
       it.instances = 8
     })
-    logger.atInfo().log { "application started" }
+    logger.log(System.Logger.Level.INFO, "application started")
   }
 }

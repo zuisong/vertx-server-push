@@ -3,6 +3,12 @@
     "includes": [
       {
         "pattern": "META-INF/vertx.*"
+      },
+      {
+        "pattern": "logback.xml$"
+      },
+      {
+        "pattern": "webroot/*"
       }
     ],
     "excludes": [

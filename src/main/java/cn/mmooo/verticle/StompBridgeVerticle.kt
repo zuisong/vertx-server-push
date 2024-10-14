@@ -11,12 +11,12 @@ import io.vertx.ext.stomp.StompServerOptions
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.*
-import org.slf4j.LoggerFactory
+import java.lang.System.Logger.Level.*
 
 
 class StompBridgeVerticle : AbstractVerticle() {
 
-  private val logger = LoggerFactory.getLogger(StompBridgeVerticle::class.java)
+  private val logger = System.getLogger(StompBridgeVerticle::class.java.simpleName)
 
   override fun start() {
     val port = System.getenv()["PUSH_PORT"]?.toIntOrNull() ?: 13000
@@ -25,6 +25,7 @@ class StompBridgeVerticle : AbstractVerticle() {
 
     val router = Router.router(vertx)
     router.route()
+
       .handler(LoggerHandler.create())
       .handler(ResponseTimeHandler.create())
       .handler(TimeoutHandler.create(10 * 1000))
@@ -32,7 +33,7 @@ class StompBridgeVerticle : AbstractVerticle() {
       .handler(BodyHandler.create())
       .handler(StaticHandler.create())
       .failureHandler { rc ->
-        logger.atError().setCause(rc.failure()).log()
+        logger.log(ERROR, "", rc.failure())
         rc.response()
           .setStatusCode(500)
           .end(rc.failure().message)
@@ -41,32 +42,41 @@ class StompBridgeVerticle : AbstractVerticle() {
     router.get("/health").handler { ctx ->
       ctx.response().end("ok")
     }
+    router.get("/").handler { ctx ->
+      ctx.redirect("/stomp-test.html")
+    }
 
     router.post("/push")
       .handler { rc: RoutingContext ->
         val body = rc.body().asString(Charsets.UTF_8.displayName())
         val topic = rc.queryParam("topic").first()
         vertx.eventBus().publish(topic, body)
-        logger.atInfo().log("OK")
+        logger.log(INFO, "OK")
         rc.response().end("ok")
       }
+
 
     vertx
       .createHttpServer(
         HttpServerOptions().also {
-          it.webSocketSubProtocols = listOf("v10.stomp", "v11.stomp", "v12.stomp")
+          it.webSocketSubProtocols = listOf("v10.stomp", "v11.stomp", "v12.stomp",
+            "v13.stomp"
+            )
+          it.isHttp2ClearTextEnabled = true
         }
+
       )
       .webSocketHandler(server.webSocketHandler())
       .requestHandler(router)
       .listen(port)
       .onSuccess {
-        logger.info( "websocket server listen at {}", port )
+        logger.log(INFO, "websocket server listen at {0}", port)
       }
   }
 
 
   private fun createStompServer(vertx: Vertx): StompServer {
+
     return StompServer.create(
       vertx,
       StompServerOptions()
