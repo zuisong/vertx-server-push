@@ -24,7 +24,7 @@
         <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
         <logback.version>1.5.10</logback.version>
         <slf4j.version>2.0.16</slf4j.version>
-        <netty.version>4.1.114.Final</netty.version>
+        <netty.version>4.1.115.Final</netty.version>
         <rainbowgum.version>0.7.1</rainbowgum.version>
     </properties>
     <dependencyManagement>
