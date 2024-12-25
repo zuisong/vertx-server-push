@@ -1,6 +1,5 @@
 module cn.mmooo
 {
-    requires java.base;
     requires java.se;
     requires jdk.net;
     requires kotlin.reflect;
@@ -10,13 +9,23 @@ module cn.mmooo
     requires io.vertx.stomp;
     requires io.vertx.eventbusbridge.common;
     requires io.netty.handler;
+    requires io.netty.codec.compression;
     requires io.netty.common;
     requires io.netty.resolver.dns;
     requires io.netty.codec.dns;
 //    requires org.apache.logging.log4j;
     requires com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.dataformat.yaml;
     requires com.fasterxml.jackson.kotlin;
-    requires ch.qos.logback.classic;
+    requires penna.core;
+    requires penna.api;
+    requires penna.config.yaml;
     requires org.slf4j.jdk.platform.logging;
+    requires io.netty.transport;
+    requires io.netty.codec.http;
+    requires org.slf4j;
+    requires com.google.common;
+    requires org.jetbrains.annotations;
+
     opens webroot;
 }

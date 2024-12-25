@@ -7,8 +7,8 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
     <properties>
-        <kotlin.version>2.0.21</kotlin.version>
-        <vertx.version>4.5.11</vertx.version>
+        <kotlin.version>2.1.0</kotlin.version>
+        <vertx.version>5.0.0.CR3</vertx.version>
         <jackson-bom.version>2.18.2</jackson-bom.version>
         <java.version>21</java.version>
         <log4j.version>2.24.1</log4j.version>
@@ -22,17 +22,18 @@
         <main.class>cn.mmooo.MainKt</main.class>
         <exec.mainClass>${main.class}</exec.mainClass>
         <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
-        <logback.version>1.5.10</logback.version>
+        <logback.version>1.5.12</logback.version>
         <slf4j.version>2.0.16</slf4j.version>
-        <netty.version>4.1.114.Final</netty.version>
-        <rainbowgum.version>0.7.1</rainbowgum.version>
+        <netty.version>4.2.0.RC1</netty.version>
+        <rainbowgum.version>0.8.0</rainbowgum.version>
+        <penna.version>0.8.1</penna.version>
     </properties>
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.5.12</version>
+                <version>${logback.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -96,12 +97,21 @@
             <artifactId>vertx-stomp</artifactId>
         </dependency>
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk-platform-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.4</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec-compression</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -245,23 +255,6 @@
             </plugin>
         </plugins>
     </build>
-    <repositories>
-        <repository>
-            <id>central</id>
-            <url>${mvn.repo.url}</url>
-        </repository>
-        <repository>
-            <id>maven_central</id>
-            <name>Maven Central</name>
-            <url>https://repo.maven.apache.org/maven2/</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>central</id>
-            <url>${mvn.repo.url}</url>
-        </pluginRepository>
-    </pluginRepositories>
     <profiles>
         <profile>
             <id>native</id>

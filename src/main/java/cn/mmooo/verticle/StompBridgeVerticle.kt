@@ -16,81 +16,81 @@ import java.lang.System.Logger.Level.*
 
 class StompBridgeVerticle : AbstractVerticle() {
 
-  private val logger = System.getLogger(StompBridgeVerticle::class.java.simpleName)
+    private val logger = System.getLogger(StompBridgeVerticle::class.java.simpleName)
 
-  override fun start() {
-    val port = System.getenv()["PUSH_PORT"]?.toIntOrNull() ?: 13000
+    override fun start() {
+        val port = System.getenv()["PUSH_PORT"]?.toIntOrNull() ?: 13000
 
-    val server = createStompServer(vertx)
+        val server = createStompServer(vertx)
 
-    val router = Router.router(vertx)
-    router.route()
+        val router = Router.router(vertx)
+        router.route()
 
-      .handler(LoggerHandler.create())
-      .handler(ResponseTimeHandler.create())
-      .handler(TimeoutHandler.create(10 * 1000))
-      .handler(CorsHandler.create().allowCredentials(true))
-      .handler(BodyHandler.create())
-      .handler(StaticHandler.create())
-      .failureHandler { rc ->
-        logger.log(ERROR, "", rc.failure())
-        rc.response()
-          .setStatusCode(500)
-          .end(rc.failure().message)
-      }
+            .handler(LoggerHandler.create())
+            .handler(ResponseTimeHandler.create())
+            .handler(TimeoutHandler.create(10 * 1000))
+            .handler(CorsHandler.create().allowCredentials(true))
+            .handler(BodyHandler.create())
+            .handler(StaticHandler.create())
+            .failureHandler { rc ->
+                logger.log(ERROR, "", rc.failure())
+                rc.response()
+                    .setStatusCode(500)
+                    .end(rc.failure().message)
+            }
 
-    router.get("/health").handler { ctx ->
-      ctx.response().end("ok")
-    }
-    router.get("/").handler { ctx ->
-      ctx.redirect("/stomp-test.html")
-    }
-
-    router.post("/push")
-      .handler { rc: RoutingContext ->
-        val body = rc.body().asString(Charsets.UTF_8.displayName())
-        val topic = rc.queryParam("topic").first()
-        vertx.eventBus().publish(topic, body)
-        logger.log(INFO, "OK")
-        rc.response().end("ok")
-      }
-
-
-    vertx
-      .createHttpServer(
-        HttpServerOptions().also {
-          it.webSocketSubProtocols = listOf("v10.stomp", "v11.stomp", "v12.stomp",
-            "v13.stomp"
-            )
-          it.isHttp2ClearTextEnabled = true
+        router.get("/health").handler { ctx ->
+            ctx.response().end("ok")
+        }
+        router.get("/").handler { ctx ->
+            ctx.redirect("/stomp-test.html")
         }
 
-      )
-      .webSocketHandler(server.webSocketHandler())
-      .requestHandler(router)
-      .listen(port)
-      .onSuccess {
-        logger.log(INFO, "websocket server listen at {0}", port)
-      }
-  }
+        router.post("/push")
+            .handler { rc: RoutingContext ->
+                val body = rc.body().asString(Charsets.UTF_8.displayName())
+                val topic = rc.queryParam("topic").first()
+                vertx.eventBus().publish(topic, body)
+                logger.log(INFO, "OK")
+                rc.response().end("ok")
+            }
 
 
-  private fun createStompServer(vertx: Vertx): StompServer {
+        vertx
+            .createHttpServer(
+                HttpServerOptions().also {
+                    it.webSocketSubProtocols = listOf(
+                        "v10.stomp", "v11.stomp", "v12.stomp",
+                    )
+                    it.isHttp2ClearTextEnabled = true
+                }
+            )
+            .webSocketHandler(server.webSocketHandler())
+            .requestHandler(router)
+            .listen(port)
+            .onSuccess {
+                logger.log(INFO, "websocket server listen at {0}", port)
+            }
+    }
 
-    return StompServer.create(
-      vertx,
-      StompServerOptions()
-        .setPort(-1)
-        .setWebsocketBridge(true)
-        .setWebsocketPath("/stomp")
-    ).handler(
-      StompServerHandler.create(vertx).bridge(
-        BridgeOptions()
-          // 禁止网页向 eventbus 发消息
-          .addInboundPermitted(PermittedOptions().setAddress("NO_PERMISSION"))
-          .addOutboundPermitted(PermittedOptions())
-      )
-    )
-  }
+
+    private fun createStompServer(vertx: Vertx): StompServer {
+
+        return StompServer.create(
+            vertx,
+            StompServerOptions()
+                .setPort(-1)
+                .setWebsocketBridge(true)
+                .setWebsocketPath("/stomp")
+
+        ).handler(
+            StompServerHandler.create(vertx).bridge(
+                BridgeOptions()
+                    // 禁止网页向 eventbus 发消息
+                    .addInboundPermitted(PermittedOptions().setAddress("NO_PERMISSION"))
+                    .addOutboundPermitted(PermittedOptions())
+            )
+        )
+    }
 
 }
