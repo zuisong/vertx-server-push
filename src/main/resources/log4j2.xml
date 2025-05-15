@@ -6,8 +6,8 @@
 
     <Appenders>
         <Console name="CONSOLE">
-<!--            <JsonTemplateLayout eventTemplateUri="classpath:GelfLayout.json"/>-->
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <JsonTemplateLayout eventTemplateUri="classpath:GelfLayout.json"/>
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
     </Appenders>
 

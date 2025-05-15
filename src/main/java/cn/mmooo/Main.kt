@@ -19,7 +19,7 @@ fun main() {
 
     vertx.runOnContext {
         vertx.deployVerticle(Supplier { StompBridgeVerticle() }, DeploymentOptions().also {
-            it.threadingModel = io.vertx.core.ThreadingModel.EVENT_LOOP
+            it.threadingModel = io.vertx.core.ThreadingModel.VIRTUAL_THREAD
             it.workerPoolSize = 10
             it.instances = 8
         })

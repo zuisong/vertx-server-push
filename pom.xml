@@ -7,9 +7,9 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
     <properties>
-        <kotlin.version>2.1.0</kotlin.version>
-        <vertx.version>5.0.0.CR3</vertx.version>
-        <jackson-bom.version>2.18.3</jackson-bom.version>
+        <kotlin.version>2.1.21</kotlin.version>
+        <vertx.version>5.0.0</vertx.version>
+        <jackson-bom.version>2.19.0</jackson-bom.version>
         <java.version>21</java.version>
         <log4j.version>2.24.3</log4j.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -22,11 +22,11 @@
         <main.class>cn.mmooo.MainKt</main.class>
         <exec.mainClass>${main.class}</exec.mainClass>
         <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
-        <logback.version>1.5.16</logback.version>
-        <slf4j.version>2.0.16</slf4j.version>
-        <netty.version>4.2.0.RC3</netty.version>
+        <logback.version>1.5.18</logback.version>
+        <slf4j.version>2.0.17</slf4j.version>
+        <netty.version>4.2.1.Final</netty.version>
         <rainbowgum.version>0.8.0</rainbowgum.version>
-        <penna.version>0.8.1</penna.version>
+        <pena.version>0.8.1</pena.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -109,18 +109,78 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-codec-compression</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>ch.qos.logback</groupId>-->
+<!--            <artifactId>logback-classic</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.hkupty.penna</groupId>-->
+<!--            <artifactId>penna-core</artifactId>-->
+<!--            <version>${pena.version}</version>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j2-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-layout-template-json</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
     <build>
         <finalName>app</finalName>
+
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>3.4.5</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jetbrains.kotlin</groupId>
+                    <artifactId>kotlin-maven-plugin</artifactId>
+                    <version>${kotlin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>1.7.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.3.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>io.github.git-commit-id</groupId>
+                    <artifactId>git-commit-id-maven-plugin</artifactId>
+                    <version>9.0.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>3.5.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.5.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.graalvm.buildtools</groupId>
+                    <artifactId>native-maven-plugin</artifactId>
+                    <version>0.10.6</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.4.3</version>
                 <configuration>
                     <finalName>app</finalName>
                 </configuration>
@@ -135,7 +195,6 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
                 <executions>
                     <execution>
                         <id>compile</id>
@@ -162,7 +221,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
-                <version>1.6.0</version>
                 <configuration>
                     <flattenMode>oss</flattenMode>
                 </configuration>
@@ -186,7 +244,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -200,7 +257,6 @@
             <plugin>
                 <groupId>io.github.git-commit-id</groupId>
                 <artifactId>git-commit-id-maven-plugin</artifactId>
-                <version>9.0.1</version>
                 <executions>
                     <execution>
                         <goals>
@@ -218,7 +274,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>3.5.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -233,7 +288,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.5.0</version>
                 <executions>
                     <execution>
                         <id>enforce-versions</id>
@@ -263,7 +317,6 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.10.5</version>
                         <extensions>true</extensions>
                         <executions>
                             <execution>

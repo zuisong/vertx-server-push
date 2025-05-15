@@ -1,6 +1,7 @@
 package cn.mmooo.verticle
 
-import io.vertx.core.AbstractVerticle
+import io.vertx.core.Future
+import io.vertx.core.VerticleBase
 import io.vertx.core.Vertx
 import io.vertx.core.http.HttpServerOptions
 import io.vertx.ext.bridge.PermittedOptions
@@ -11,14 +12,15 @@ import io.vertx.ext.stomp.StompServerOptions
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.*
-import java.lang.System.Logger.Level.*
+import java.lang.System.Logger.Level.ERROR
+import java.lang.System.Logger.Level.INFO
 
 
-class StompBridgeVerticle : AbstractVerticle() {
+class StompBridgeVerticle : VerticleBase() {
 
     private val logger = System.getLogger(StompBridgeVerticle::class.java.simpleName)
 
-    override fun start() {
+    override fun start(): Future<Void> {
         val port = System.getenv()["PUSH_PORT"]?.toIntOrNull() ?: 13000
 
         val server = createStompServer(vertx)
@@ -71,6 +73,8 @@ class StompBridgeVerticle : AbstractVerticle() {
             .onSuccess {
                 logger.log(INFO, "websocket server listen at {0}", port)
             }
+
+        return Future.succeededFuture()
     }
 
 

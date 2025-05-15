@@ -27,14 +27,14 @@ fun main() {
 
 val userIdToSocket = DualHashBidiMap<String, String>()
 
-class Server : AbstractVerticle() {
+class Server : VerticleBase() {
 
 
     val log = System.getLogger("ws")
 
     var textHandlerID: String = ""
 
-    override fun start() {
+    override fun start(): Future<*> {
 
 
         val httpServer = vertx.createHttpServer(
@@ -70,9 +70,7 @@ class Server : AbstractVerticle() {
 
         }
 
-        Future.await(httpServer.listen(9998))
-
-
+        return httpServer.listen(9998)
     }
 
     private fun extractUserId(textMsg: String?): String? {
