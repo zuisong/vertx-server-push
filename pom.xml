@@ -22,7 +22,7 @@
         <main.class>cn.mmooo.MainKt</main.class>
         <exec.mainClass>${main.class}</exec.mainClass>
         <kotlin.compiler.jvmTarget>${java.version}</kotlin.compiler.jvmTarget>
-        <logback.version>1.5.18</logback.version>
+        <logback.version>1.5.20</logback.version>
         <slf4j.version>2.0.17</slf4j.version>
         <netty.version>4.2.6.Final</netty.version>
         <rainbowgum.version>0.8.0</rainbowgum.version>
